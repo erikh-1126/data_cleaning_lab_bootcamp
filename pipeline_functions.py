@@ -1,4 +1,5 @@
 # %%
+# Import packages
 import pandas as pd
 import numpy as np
 
@@ -6,15 +7,38 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 # %%
+# Convert the columns to numeric data
 def coerce_numeric(df, cols):
     df = df.copy()
     for col in cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
     return df
+    
 # %%
+# Drop missing values
 def drop_missing(df):
     return df.dropna().copy()
+
 # %%
+# Split the data into training, tuning, and testing data
+def split_data(X, y, test_size=0.4, random_state=42):
+    X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=test_size, stratify=y,random_state=random_state)
+    X_tune, X_test, y_tune, y_test = train_test_split(X_temp, y_temp, test_size=0.5, stratify=y_temp, random_state=random_state)
+    return X_train, X_tune, X_test, y_train, y_tune, y_test
+
+# %%
+# Scale numeric variables
+def scale_numeric(X_train, X_tune, X_test, numeric_cols):
+    scaler = StandardScaler()
+    X_train[numeric_cols] = scaler.fit_transform(X_train[numeric_cols])
+    X_tune[numeric_cols] = scaler.transform(X_tune[numeric_cols])
+    X_test[numeric_cols] = scaler.transform(X_test[numeric_cols])
+    return X_train, X_tune, X_test
+
+# %%
+# College Completion:
+# %%
+# Select variables
 def select_college_vars(df):
     cols = ["aid_value", "med_sat_value", "fte_value", "ft_pct", "grad_100_value"]
     return df[cols].copy()
