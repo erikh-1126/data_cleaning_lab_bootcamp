@@ -37,19 +37,25 @@ def scale_numeric(X_train, X_tune, X_test, numeric_cols):
 
 # %%
 # College Completion:
+df = pd.read_csv('cc_institution_details.csv')
+
 # %%
 # Select variables
 def select_college_vars(df):
     cols = ["aid_value", "med_sat_value", "fte_value", "ft_pct", "grad_100_value"]
     return df[cols].copy()
+    
 # %%
+# Make target variable
 def create_grad_target(df):
     median_grad = df["grad_100_value"].median()
     df = df.copy()
     df["high_4yr_grad"] = (df["grad_100_value"] >= median_grad).astype(int)
     df = df.drop(columns=["grad_100_value"])
     return df
+    
 # %%
+# Make the pipeline
 def college_completion_pipeline(df):
     df = select_college_vars(df)
     df = coerce_numeric(df, df.columns)
@@ -70,19 +76,28 @@ def college_completion_pipeline(df):
     return X_train, X_tune, X_test, y_train, y_tune, y_test
 
 # %%
+# Campus Recruitment:
+
+# %%
+# Select variables
 def select_recruitment_vars(df):
     cols = ["hsc_p", "hsc_s", "ssc_p", "degree_p", "degree_t", "workex", "status"]
     return df[cols].copy()
+    
 # %%
+# Create target variable
 def create_placement_target(df):
     df = df.copy()
     df["placed"] = (df["status"] == "Placed").astype(int)
     return df.drop(columns=["status"])
+    
 # %%
+# Encode categorical variables
 def encode_categoricals(df, cat_cols):
     return pd.get_dummies(df, columns=cat_cols, drop_first=True)
 
 # %%
+# Make pipeline
 def campus_recruitment_pipeline(df):
     df = select_recruitment_vars(df)
     df = coerce_numeric(df, ["hsc_p", "ssc_p", "degree_p"])
