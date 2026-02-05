@@ -4,8 +4,6 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-df = pd.read_csv('cc_institution_details.csv')
-df2 = pd.read_csv('campus_recruitment.csv')
 
 # %%
 def coerce_numeric(df, cols):
